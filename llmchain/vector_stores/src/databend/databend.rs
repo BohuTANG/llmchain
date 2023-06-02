@@ -19,7 +19,7 @@ use databend_driver::new_connection;
 use futures_util::StreamExt;
 use llmchain_common::escape_sql_string;
 use llmchain_embeddings::Embedding;
-use llmchain_loaders::Document;
+use llmchain_sources::Document;
 use uuid::Uuid;
 
 use crate::VectorStore;

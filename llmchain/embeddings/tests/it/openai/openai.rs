@@ -15,7 +15,7 @@
 use anyhow::Result;
 use llmchain_embeddings::Embedding;
 use llmchain_embeddings::OpenAIEmbedding;
-use llmchain_loaders::Document;
+use llmchain_sources::Document;
 
 #[tokio::test]
 async fn test_embedding_openai() -> Result<()> {

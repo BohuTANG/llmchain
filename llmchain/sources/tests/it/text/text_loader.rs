@@ -16,24 +16,24 @@ use std::io::Write;
 
 use anyhow::Result;
 use goldenfile::Mint;
-use llmchain_loaders::DocumentLoader;
-use llmchain_loaders::LocalDisk;
-use llmchain_loaders::MarkdownLoader;
+use llmchain_sources::DocumentLoader;
+use llmchain_sources::LocalDisk;
+use llmchain_sources::TextLoader;
 
 #[test]
-fn test_markdown_loader() -> Result<()> {
+fn test_text_loader() -> Result<()> {
     // testdata dir.
     let curdir = std::env::current_dir()?.to_str().unwrap().to_string();
     let testdata_dir = format!("{}/tests/testdata", curdir);
-    let markdown_file = format!("{}/markdown/copy.md", testdata_dir);
+    let text_file = format!("{}/text/example.txt", testdata_dir);
 
     // Load
-    let markdown_loader = MarkdownLoader::create(LocalDisk::create()?);
-    let documents = markdown_loader.load(&markdown_file)?;
+    let text_loader = TextLoader::create(LocalDisk::create()?);
+    let documents = text_loader.load(&text_file)?;
 
     // Check.
     let mut mint = Mint::new(&testdata_dir);
-    let golden_path = "markdown/copy_md_loader.golden";
+    let golden_path = "text/example_txt_loader.golden";
     let mut file = mint.new_goldenfile(golden_path)?;
     for (i, doc) in documents.iter().enumerate() {
         writeln!(

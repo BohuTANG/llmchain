@@ -17,7 +17,7 @@ use std::sync::Arc;
 use anyhow::Result;
 use env_logger::Env;
 use llmchain_embeddings::OpenAIEmbedding;
-use llmchain_loaders::Document;
+use llmchain_sources::Document;
 use llmchain_vector_stores::DatabendVectorStore;
 use llmchain_vector_stores::VectorStore;
 use log::info;

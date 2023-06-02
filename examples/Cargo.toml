@@ -40,8 +40,8 @@ test = false
 
 [dependencies]
 llmchain-embeddings = { path = "../llmchain/embeddings" }
-llmchain-loaders = { path = "../llmchain/loaders" }
 llmchain-llms = { path = "../llmchain/llms" }
+llmchain-sources = { path = "../llmchain/sources" }
 llmchain-prompts = { path = "../llmchain/prompts" }
 llmchain-vector-stores = { path = "../llmchain/vector_stores" }
 

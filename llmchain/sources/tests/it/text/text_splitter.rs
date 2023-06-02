@@ -16,29 +16,29 @@ use std::io::Write;
 
 use anyhow::Result;
 use goldenfile::Mint;
-use llmchain_loaders::DocumentLoader;
-use llmchain_loaders::DocumentSplitter;
-use llmchain_loaders::LocalDisk;
-use llmchain_loaders::MarkdownLoader;
-use llmchain_loaders::MarkdownSplitter;
+use llmchain_sources::DocumentLoader;
+use llmchain_sources::DocumentSplitter;
+use llmchain_sources::LocalDisk;
+use llmchain_sources::TextLoader;
+use llmchain_sources::TextSplitter;
 
 #[test]
-fn test_markdown_splitter_default() -> Result<()> {
+fn test_text_splitter_default() -> Result<()> {
     // testdata dir.
     let curdir = std::env::current_dir()?.to_str().unwrap().to_string();
     let testdata_dir = format!("{}/tests/testdata", curdir);
-    let markdown_file = format!("{}/markdown/copy.md", testdata_dir);
+    let text_file = format!("{}/text/example.txt", testdata_dir);
 
     // Load
-    let markdown_loader = MarkdownLoader::create(LocalDisk::create()?);
-    let documents = markdown_loader.load(&markdown_file)?;
+    let text_loader = TextLoader::create(LocalDisk::create()?);
+    let documents = text_loader.load(&text_file)?;
 
-    let markdown_splitter = MarkdownSplitter::create();
-    let documents = markdown_splitter.split_documents(&documents)?;
+    let text_splitter = TextSplitter::create();
+    let documents = text_splitter.split_documents(&documents)?;
 
     // Check.
     let mut mint = Mint::new(&testdata_dir);
-    let golden_path = "markdown/copy_md_splitter_default.golden";
+    let golden_path = "text/example_txt_splitter_default.golden";
     let mut file = mint.new_goldenfile(golden_path)?;
     for (i, doc) in documents.iter().enumerate() {
         writeln!(
@@ -46,7 +46,7 @@ fn test_markdown_splitter_default() -> Result<()> {
             "part={}, len={}, chunk_size={}, md5={}",
             i,
             doc.content.len(),
-            markdown_splitter.splitter_chunk_size,
+            text_splitter.splitter_chunk_size,
             doc.content_md5
         )?;
         writeln!(
@@ -60,25 +60,25 @@ fn test_markdown_splitter_default() -> Result<()> {
 }
 
 #[test]
-fn test_markdown_splitter_100() -> Result<()> {
+fn test_text_splitter_10() -> Result<()> {
     // testdata dir.
     let curdir = std::env::current_dir()?.to_str().unwrap().to_string();
     let testdata_dir = format!("{}/tests/testdata", curdir);
-    let markdown_file = format!("{}/markdown/copy.md", testdata_dir);
+    let text_file = format!("{}/text/example.txt", testdata_dir);
 
     // Load
-    let markdown_loader = MarkdownLoader::create(LocalDisk::create()?);
-    let documents = markdown_loader.load(&markdown_file)?;
+    let text_loader = TextLoader::create(LocalDisk::create()?);
+    let documents = text_loader.load(&text_file)?;
 
-    let markdown_splitter = MarkdownSplitter::create().with_chunk_size(100);
-    let documents = markdown_splitter.split_documents(&documents)?;
+    let text_splitter = TextSplitter::create().with_chunk_size(10);
+    let documents = text_splitter.split_documents(&documents)?;
 
     // Check.
-    assert_eq!(documents.len(), 14);
+    assert_eq!(documents.len(), 2);
 
     // Check.
     let mut mint = Mint::new(&testdata_dir);
-    let golden_path = "markdown/copy_md_splitter_chunk_100.golden";
+    let golden_path = "text/example_txt_splitter_chunk_10.golden";
     let mut file = mint.new_goldenfile(golden_path)?;
     for (i, doc) in documents.iter().enumerate() {
         writeln!(
@@ -86,8 +86,8 @@ fn test_markdown_splitter_100() -> Result<()> {
             "part={}, len={}, chunk_size={}, md5={}",
             i,
             doc.content.len(),
-            markdown_splitter.splitter_chunk_size,
-            doc.content_md5
+            text_splitter.splitter_chunk_size,
+            doc.content_md5,
         )?;
         writeln!(
             file,

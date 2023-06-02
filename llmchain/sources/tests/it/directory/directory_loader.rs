@@ -16,24 +16,28 @@ use std::io::Write;
 
 use anyhow::Result;
 use goldenfile::Mint;
-use llmchain_loaders::DocumentLoader;
-use llmchain_loaders::LocalDisk;
-use llmchain_loaders::TextLoader;
+use llmchain_sources::DirectoryLoader;
+use llmchain_sources::DocumentLoader;
+use llmchain_sources::LocalDisk;
+use llmchain_sources::MarkdownLoader;
 
 #[test]
-fn test_text_loader() -> Result<()> {
+fn test_directory_loader() -> Result<()> {
     // testdata dir.
     let curdir = std::env::current_dir()?.to_str().unwrap().to_string();
     let testdata_dir = format!("{}/tests/testdata", curdir);
-    let text_file = format!("{}/text/example.txt", testdata_dir);
+    let directory_dir = format!("{}/directory/", testdata_dir);
 
     // Load
-    let text_loader = TextLoader::create(LocalDisk::create()?);
-    let documents = text_loader.load(&text_file)?;
+    let markdown_loader = MarkdownLoader::create(LocalDisk::create()?);
+    let directory_loader =
+        DirectoryLoader::create(LocalDisk::create()?).with_loader("**/*.md", markdown_loader);
+    let documents = directory_loader.load(&directory_dir)?;
+    assert_eq!(documents.len(), 2);
 
     // Check.
     let mut mint = Mint::new(&testdata_dir);
-    let golden_path = "text/example_txt_loader.golden";
+    let golden_path = "directory/directory_loader.golden";
     let mut file = mint.new_goldenfile(golden_path)?;
     for (i, doc) in documents.iter().enumerate() {
         writeln!(

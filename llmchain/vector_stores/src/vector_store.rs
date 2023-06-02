@@ -13,7 +13,7 @@
 // limitations under the License.
 
 use anyhow::Result;
-use llmchain_loaders::Document;
+use llmchain_sources::Document;
 
 #[async_trait::async_trait]
 pub trait VectorStore: Send + Sync {

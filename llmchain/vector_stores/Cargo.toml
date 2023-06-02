@@ -9,8 +9,8 @@ keywords = ["LLMs"]
 
 [dependencies]
 llmchain-common = { path = "../common" }
-llmchain-loaders = { path = "../loaders" }
 llmchain-embeddings = { path = "../embeddings" }
+llmchain-sources = { path = "../sources" }
 
 anyhow = { workspace = true }
 async-trait = { workspace = true }

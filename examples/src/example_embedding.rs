@@ -16,7 +16,7 @@ use anyhow::Result;
 use env_logger::Env;
 use llmchain_embeddings::Embedding;
 use llmchain_embeddings::OpenAIEmbedding;
-use llmchain_loaders::Document;
+use llmchain_sources::Document;
 use log::info;
 
 /// EXPORT OPENAI_API_KEY=<your-openai-api-key>

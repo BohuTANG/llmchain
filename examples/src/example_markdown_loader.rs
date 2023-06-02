@@ -14,10 +14,10 @@
 
 use anyhow::Result;
 use env_logger::Env;
-use llmchain_loaders::DirectoryLoader;
-use llmchain_loaders::DocumentLoader;
-use llmchain_loaders::LocalDisk;
-use llmchain_loaders::MarkdownLoader;
+use llmchain_sources::DirectoryLoader;
+use llmchain_sources::DocumentLoader;
+use llmchain_sources::LocalDisk;
+use llmchain_sources::MarkdownLoader;
 use log::info;
 
 /// cargo run --bin example_markdown_loader

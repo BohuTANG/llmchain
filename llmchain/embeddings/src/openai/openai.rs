@@ -15,7 +15,7 @@
 use anyhow::Result;
 use llmchain_llms::OpenAI;
 use llmchain_llms::LLM;
-use llmchain_loaders::Document;
+use llmchain_sources::Document;
 
 use crate::Embedding;
 

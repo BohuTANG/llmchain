@@ -8,8 +8,8 @@ categories = ["LLMs"]
 keywords = ["LLMs"]
 
 [dependencies]
-llmchain-loaders = { path = "../loaders" }
 llmchain-llms = { path = "../llms" }
+llmchain-sources = { path = "../sources" }
 
 anyhow = { workspace = true }
 async-trait = { workspace = true }
