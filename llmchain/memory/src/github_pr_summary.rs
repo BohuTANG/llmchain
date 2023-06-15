@@ -41,7 +41,7 @@ impl GithubPRSummary {
 impl Summarize for GithubPRSummary {
     async fn add_document(&self, document: &Document) -> Result<()> {
         let template = "{text} \"\"\", you are world-class programmer,
-        you should accurately and clearly describe each code change, highlighting the key improvement or feature.
+        you should accurately and clearly describe the above code changes.
         Please ensure that the summary is concise and to the point, providing relevant information about the change without any unnecessary details:
         1.";
         let prompt_template = PromptTemplate::create(template, vec!["text".to_string()]);

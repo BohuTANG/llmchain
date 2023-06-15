@@ -56,7 +56,6 @@ impl DocumentSplitter for GithubPRDiffSplitter {
         for document in documents {
             let content = Box::leak(document.content.clone().into_boxed_str());
             let patches = Patch::from_multiple(content)?;
-            let mut batch_buffer = Vec::new();
             for patch in patches {
                 let mut need_skip = false;
                 for skip in &self.skips {
@@ -70,22 +69,8 @@ impl DocumentSplitter for GithubPRDiffSplitter {
 
                 if !need_skip {
                     let content = format!("{}", patch);
-                    if batch_buffer.len() + content.len() < self.splitter_chunk_size {
-                        batch_buffer.push(content);
-                    } else {
-                        if !batch_buffer.is_empty() {
-                            diff_documents
-                                .push(Document::create(&document.path, &batch_buffer.join("\n")));
-                            batch_buffer.clear();
-                        }
-                        batch_buffer.push(content);
-                    }
+                    diff_documents.push(Document::create(&document.path, &content));
                 }
-            }
-
-            if !batch_buffer.is_empty() {
-                diff_documents.push(Document::create(&document.path, &batch_buffer.join("\n")));
-                batch_buffer.clear();
             }
         }
         info!(
