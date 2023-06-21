@@ -71,18 +71,18 @@ impl DocumentSplitter for GithubPRDiffSplitter {
                 if !need_skip {
                     // Only keep the diffs to reduce tokens.
                     let mut patch_diffs = vec![];
-                    patch_diffs.push(format!("changed file path:{}", patch.new.path,));
+                    patch_diffs.push(format!("file:{}", patch.new.path,));
 
                     for hunk in patch.hunks {
                         for line in hunk.lines {
                             match line {
-                                patch::Line::Context(_) => {}
                                 patch::Line::Add(content) => {
                                     patch_diffs.push(format!("+{}", content));
                                 }
                                 patch::Line::Remove(content) => {
                                     patch_diffs.push(format!("-{}", content));
                                 }
+                                _ => {}
                             }
                         }
                     }

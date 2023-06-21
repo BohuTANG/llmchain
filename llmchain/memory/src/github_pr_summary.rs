@@ -41,27 +41,33 @@ impl GithubPRSummary {
 
 #[async_trait::async_trait]
 impl Summarize for GithubPRSummary {
-    async fn add_document(&self, document: &Document) -> Result<()> {
-        let template = "
-        ```
-        {text}
-        ```
-Act as a world-class programmer, please summarize the code changes line by line above in github changelogs style to bullet points:";
-        let prompt_template = PromptTemplate::create(template, vec!["text".to_string()]);
-        let mut input_variables = HashMap::new();
-        input_variables.insert("text", document.content.as_str());
-        let prompt = prompt_template.format(input_variables)?;
-
-        let summary = self.llm.generate(&prompt).await?;
-        info!("summary: {}", summary.generation);
-        self.summaries.write().push(summary.generation);
-
-        Ok(())
-    }
-
     async fn add_documents(&self, documents: &[Document]) -> Result<()> {
-        for document in documents {
-            self.add_document(document).await?;
+        let size = documents.len();
+        for (i, document) in documents.iter().enumerate() {
+            let template = "
+Act as a Senior Developer and describe the code patch.
+Do not include any explanations, only provide a short description of the code patch:
+```
+{text}
+```
+";
+            let prompt_template = PromptTemplate::create(template, vec!["text".to_string()]);
+            let mut input_variables = HashMap::new();
+            input_variables.insert("text", document.content.as_str());
+            let prompt = prompt_template.format(input_variables)?;
+
+            let now = std::time::Instant::now();
+            let summary = self.llm.generate(&prompt).await?;
+            {
+                info!(
+                    "summary [{}/{}, cost: {}sec]:\n {}",
+                    (i + 1),
+                    size,
+                    now.elapsed().as_secs(),
+                    summary.generation
+                );
+            }
+            self.summaries.write().push(summary.generation);
         }
 
         Ok(())
@@ -78,6 +84,7 @@ Act as a world-class programmer, please summarize the code changes line by line 
 
         let prompt_template = GithubPRSummaryPrompt::create();
         let prompt = prompt_template.format(input_variables)?;
+        info!("prompt:\n{}", prompt);
 
         let summary = self.llm.generate(&prompt).await?;
         info!("final summary: {}", summary.generation);

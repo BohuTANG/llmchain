@@ -17,7 +17,6 @@ use llmchain_loaders::Document;
 
 #[async_trait::async_trait]
 pub trait Summarize: Send + Sync {
-    async fn add_document(&self, document: &Document) -> Result<()>;
     async fn add_documents(&self, documents: &[Document]) -> Result<()>;
     async fn final_summary(&self) -> Result<String>;
 }
